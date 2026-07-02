@@ -1,0 +1,71 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+
+<h1>Movie Review</h1>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<p>
+제목
+<br>
+<input type="text" name="title" value="{{ review.title }}" required>
+</p>
+
+<p>
+개봉년도
+<br>
+<input type="number" name="release_year" value="{{ review.release_year }}" required>
+</p>
+
+<p>
+장르
+<br>
+<input type="text" name="genre" value="{{ review.genre }}" required>
+</p>
+
+<p>
+별점
+<br>
+<input type="number" step="0.1" name="rating" value="{{ review.rating }}" required>
+</p>
+
+<p>
+러닝타임
+<br>
+<input type="number" name="running_time" value="{{ review.running_time }}" required>
+</p>
+
+<p>
+감독
+<br>
+<input type="text" name="director" value="{{ review.director }}" required>
+</p>
+
+<p>
+배우
+<br>
+<input type="text" name="actor" value="{{ review.actor }}" required>
+</p>
+
+<p>
+리뷰
+<br>
+
+<textarea 
+name="content"
+rows="10"
+cols="60"
+required>{{ review.content }}</textarea>
+
+</p>
+
+<button type="submit">
+Save
+</button>
+
+</form>
+
+{% endblock %}

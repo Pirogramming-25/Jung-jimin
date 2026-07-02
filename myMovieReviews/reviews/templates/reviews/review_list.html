@@ -1,0 +1,62 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+
+<style>
+
+.review-list{
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card{
+    width: 180px;
+    background: #f3f3f3;
+    padding: 20px;
+}
+
+.poster{
+    width: 100%;
+    height: 220px;
+    background: #d9d9d9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.card a{
+    text-decoration: none;
+    color: black;
+}
+
+</style>
+
+<div class="review-list">
+
+{% for review in reviews %}
+
+<div class="card">
+    <a href="{% url 'reviews:review_detail' review.pk %}">
+    <div class="poster">
+    Poster
+    </div>
+
+    <h3>{{ review.title }}</h3>
+
+    <p>개봉년도 {{ review.release_year }}</p>
+
+    <p>장르 {{ review.genre }}</p>
+
+    <p>별점 {{ review.rating }}</p>
+    </a>
+</div>
+{% empty %}
+<h2>리뷰가 없습니다.</h2>
+
+{% endfor %}
+</div>
+{% endblock %}

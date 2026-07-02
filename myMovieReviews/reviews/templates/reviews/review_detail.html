@@ -1,0 +1,39 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+
+<h1>{{ review.title }}</h1>
+
+<hr>
+
+<p><strong>감독 :</strong> {{ review.director }}</p>
+
+<p><strong>배우 :</strong> {{ review.actor }}</p>
+
+<p><strong>장르 :</strong> {{ review.genre }}</p>
+
+<p><strong>개봉년도 :</strong> {{ review.release_year }}</p>
+
+<p><strong>러닝타임 :</strong> {{ review.running_time }}분</p>
+
+<p><strong>별점 :</strong> {{ review.rating }}</p>
+
+<p><strong>리뷰 :</strong></p>
+
+<p>{{ review.content }}</p>
+
+<br>
+
+<a class ="btn" href="{% url 'reviews:review_list' %}">
+목록
+</a>
+
+<a class ="btn" href="{% url 'reviews:review_update' review.pk %}">
+수정
+</a>
+
+<a class ="btn" href="{% url 'reviews:review_delete' review.pk %}">
+삭제
+</a>
+
+{% endblock %}
