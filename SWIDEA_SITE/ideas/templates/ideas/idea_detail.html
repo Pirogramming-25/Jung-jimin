@@ -1,0 +1,32 @@
+{% extends 'ideas/base.html' %}
+
+{% block content %}
+<h1>Idea Detail</h1>
+
+<img src="{{ idea.image.url }}" width="250">
+
+<h2>{{ idea.title }}</h2>
+
+<p>1) 아이디어 관심도: {{ idea.interest }}</p>
+<p>2) 예상 개발 툴:
+    <a href="{% url 'ideas:devtool_detail' idea.devtool.pk %}">
+        {{ idea.devtool.name }}
+    </a>
+</p>
+<p>3) 아이디어 설명</p>
+<p>{{ ideal.content }}</p>
+
+<p>
+    찜 상태:
+    {% if idea.is_star %}
+        ⭐ 찜함
+    {% else %}
+        ☆ 찜 안 함
+    {% endif %}
+</p>
+
+<a href="{% url 'ideas:star_update' idea.pk %}">찜 변경</a>
+<a href="{% url 'ideas:idea_update' idea.pk %}">수정</a>
+<a href="{% url 'ideas:idea_delete' idea.pk %}">삭제</a>
+<a href="{% url 'ideas:idea_list' %}">목록</a>
+{% endblock %}

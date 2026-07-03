@@ -1,0 +1,60 @@
+{% extends 'ideas/base.html' %}
+
+{% block content %}
+<h1>Idea List</h1>
+
+<form method="get">
+    <select name="sort">
+        <option value="">최신순</option>
+        <option value="interest">찜하기순</option>
+        <option value="name">이름순</option>
+        <option value="old">등록순</option>
+    </select>
+    <button type="submit">정렬</button>
+</form>
+
+{% for idea in ideas %}
+    <div>
+        <a href="{% url 'ideas:idea_detail' idea.pk %}">
+            <img src="{{ idea.image.url }}" width="150">
+        </a>
+
+        <h3>
+            {% if idea.is_star %}
+                ⭐
+            {% else %}
+                ☆
+            {% endif %}
+            <a href="{% url 'ideas:idea_detail' idea.pk %}">
+                {{ idea.title }}
+            </a>
+        </h3>
+
+        <p>예상 개발 툴: {{idea.devtool.name }}</p>
+        <p>
+            아이디어 관심도:
+            <button onclick="changeInterest({{ idea.pk }}, 'minus')">-</button>
+            <span id="interest-{{ idea.pk }}">{{ idea.interest }}</span>
+            <button onclick="changeInterest({{ idea.pk }}, 'plus')">+</button>
+        </p>
+    </div>
+    <hr>
+{% endfor %}
+
+<script>
+function changeInterest(id, action) {
+    fetch(`/ideas/${id}/interest/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `action=${action}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector(`#interest-${id}`).innerText = data.interest;
+    });
+}
+</script>
+{% endblock %}

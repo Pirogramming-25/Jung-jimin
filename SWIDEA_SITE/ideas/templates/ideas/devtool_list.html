@@ -1,0 +1,17 @@
+{% extends 'ideas/base.html' %}
+
+{% block content %}
+<h1>DevTool List</h1>
+
+{% for devtool in devtools %}
+    <div>
+        <h3>
+            <a href="{% url 'ideas:devtool_detail' devtool.pk %}">
+                {{ devtool.name }}
+            </a>
+        </h3>
+        <p>{{ devtool.kind }}</p>
+    </div>
+    <hr>
+{% endfor %}
+{% endblock %}
