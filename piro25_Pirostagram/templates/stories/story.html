@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>스토리 감상</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="story-modal-page">
+
+    <div class="story-dim"></div>
+
+    <div class="story-modal">
+        <a class="story-close" href="{% url 'posts:main' %}">
+            <i data-lucide="x"></i>
+        </a>
+
+
+        <button class="story-arrow left" id="prevBtn">
+            <i data-lucide="chevron-left"></i>
+        </button>
+
+        {% if stories %}
+            <img id="storyImage" class="story-modal-image" src="{{ stories.0.image.url }}" alt="">
+        {% endif %}
+
+        <button class="story-arrow right" id="nextBtn">
+            <i data-lucide="chevron-right"></i>
+        </button>
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+
+    const storyImages = [
+        {% for story in stories %}
+            "{{ story.image.url }}",
+        {% endfor %}
+    ];
+
+    let currentIndex = 0;
+
+    const storyImage = document.getElementById("storyImage");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    nextBtn.addEventListener("click", function () {
+        currentIndex++;
+
+        if (currentIndex >= storyImages.length) {
+            currentIndex = 0;
+        }
+
+        storyImage.src = storyImages[currentIndex];
+    });
+
+    prevBtn.addEventListener("click", function () {
+        currentIndex--;
+
+        if (currentIndex < 0) {
+            currentIndex = storyImages.length - 1;
+        }
+
+        storyImage.src = storyImages[currentIndex];
+    });
+</script>
+
+</body>
+</html>

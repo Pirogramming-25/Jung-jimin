@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirostagram</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="container">
+
+        <aside class="sidebar">
+
+            <h1>Pirostagram</h1>
+
+            <nav>
+                <ul>
+                    <li><i data-lucide="house"></i> 홈</li>
+                    <li><i data-lucide="search"></i> 유저검색</li>
+                    <li><i data-lucide="search"></i> 게시글 검색</li>
+                    <li><i data-lucide="square-plus"></i> 게시글 만들기</li>
+                    <li><i data-lucide="user"></i> 프로필</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+
+            <div class="stories">
+
+                <div class="story">
+                    <div class="story-circle">
+                        <img src="{% static 'images/dog.jpg' %}" alt="">
+                    </div>
+                    <p>스토리+</p>
+                </div>
+
+                <div class="story">
+                    <div class="story-circle">
+                        <img src="{% static 'images/dog.jpg' %}" alt="">
+                    </div>
+                    <p>pirouser1</p>
+                </div>
+
+                <div class="story">
+                    <div class="story-circle">
+                        <img src="{% static 'images/dog.jpg' %}" alt="">
+                    </div>
+                    <p>pirouser2</p>
+                </div>
+
+                <div class="story">
+                    <div class="story-circle">
+                        <img src="{% static 'images/dog.jpg' %}" alt="">
+                    </div>
+                    <p>pirouser3</p>
+                </div>
+
+                <div class="story">
+                    <div class="story-circle">
+                        <img src="{% static 'images/dog.jpg' %}" alt="">
+                    </div>
+                    <p>pirouser4</p>
+                </div>
+            </div>
+
+            {% for post in posts %}
+            <div class="post-card">
+
+                <div class="post-header">
+                    <div class="post-user">
+                        <img src="{% static 'images/dog.jpg' %}" alt="">
+                        <span>{{ post.author.username }}</span>
+                    </div>
+
+                    <i data-lucide="ellipsis"></i>
+                </div>
+
+                <img class="post-image" src="{{ post.image.url }}" alt="">
+
+                <div class="post-actions">
+
+                    <a href="{% url 'posts:post_like' post.id %}">
+                        <i data-lucide="heart"></i>
+                    </a>
+
+                    <i data-lucide="message-circle"></i>
+
+                </div>
+
+                <p class="like-count">좋아요 {{ post.likes.count }}개</p>
+
+                <p class="post-content">
+                    <strong>{{ post.author.username }}</strong>
+                    {{ post.content }}
+                </p>
+
+                <p class="comment-count">댓글 {{ post.comments.count }}개 보기</p>
+
+                <div class="comment-list">
+                    {% for comment in post.comments.all %}
+                        <p>
+                            <strong>{{ comment.user.username }}</strong>
+                            {{ comment.content }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+                <form class="comment-form" method="POST" action="{% url 'posts:comment_create' post.id %}">
+                    {% csrf_token %}
+                    <input type="text" name="content" placeholder="댓글 달기...">
+                    <button type="submit">게시</button>
+                </form>
+
+                <div class="post-buttons">
+                    <a href="{% url 'posts:post_update' post.id %}">수정</a>
+                    <a href="{% url 'posts:post_delete' post.id %}">삭제</a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </main>
+    </div>
+    <script>
+    lucide.createIcons();
+    </script>
+</body>
+</html>

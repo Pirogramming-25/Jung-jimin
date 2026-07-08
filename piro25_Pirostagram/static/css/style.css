@@ -1,0 +1,415 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: #F5F5F5;
+}
+
+.container{
+    display: flex;
+}
+
+.sidebar{
+    width: 220px;
+    min-height: 100vh;
+    background: white;
+    border-right: 1px solid #ddd;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.sidebar h1{
+    margin-bottom: 50px;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.sidebar ul{
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 30px 0;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.sidebar li:hover{
+    font-weight: bold;
+}
+
+.content{
+    flex: 1;
+    padding: 40px;
+}
+
+.sidebar li svg{
+    width: 20px;
+    height: 20px;
+}
+
+.stories{
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.story{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.story-circle{
+    width: 74px;
+    height: 74px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.story-circle img{
+    width: 64px;
+    height: 64px;
+
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.story p{
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.post-card{
+    width: 450px;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.post-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.post-user{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.post-user img{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-image{
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+}
+
+.post-actions{
+    display: flex;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.like-count{
+    font-weight:600;
+    margin: 12px 0 6px;
+}
+
+.post-content{
+    margin: 0 0 8px;
+}
+
+.comment-count{
+    color: #8e8e8e;
+    margin: 0;
+}
+
+.create-container{
+    width: 450px;
+    margin: 70px auto;
+
+    background: white;
+    padding: 30px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.create-container h2{
+    margin-bottom: 25px;
+}
+
+.image-box{
+
+    height: 220px;
+
+    border: 2px dashed #ccc;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    margin-bottom: 20px;
+}
+
+.image-box svg{
+    width: 40px;
+    height: 40px;
+}
+
+textarea{
+    width: 100%;
+    height: 120px;
+
+    resize: none;
+    padding: 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+button{
+    width: 100%;
+    padding: 14px;
+    border: none;
+    background: #1D4ED8;
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover{
+    background: #1E40AF;
+}
+
+.post-buttons{
+    margin-top: 12px;
+}
+
+.post-buttons a{
+    text-decoration: none;
+    color: #1D4ED8;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.post-buttons a:hover{
+    text-decoration: underline;
+}
+
+.search-container{
+    width:500px;
+    margin:50px auto;
+}
+
+.search-container input{
+    width:300px;
+    padding:10px;
+}
+
+.search-container button{
+    padding:10px 20px;
+}
+
+.user-list{
+    margin-top:30px;
+}
+
+.user-card{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    background:white;
+
+    border:1px solid #ddd;
+
+    padding:15px;
+
+    margin-bottom:15px;
+}
+
+.user-card img{
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+}
+
+.story-page{
+    padding: 50px;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+.story-upload-btn{
+    display: inline-block;
+    margin-bottom: 30px;
+    padding: 12px 18px;
+    background: #1D4ED8;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.story-grid{
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.story-view-card{
+    width: 320px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.story-view-header{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.story-view-header img{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.story-view-image{
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.story-modal-page{
+    width: 100vw;
+    height: 100vh;
+    background: url("/static/images/story-bg.png") center/cover no-repeat;
+    position: relative;
+}
+
+.story-dim{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+}
+
+.story-modal{
+    position: absolute;
+    width: 560px;
+    height: 420px;
+    background: white;
+    border-radius: 12px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.story-modal-image{
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+}
+
+.story-close{
+    position: absolute;
+    right: 24px;
+    top: 20px;
+    color: black;
+}
+
+.story-arrow{
+    position: absolute;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.story-arrow.left{
+    left: 20px;
+}
+
+.story-arrow.right{
+    right: 20px;
+}
+
+.story-arrow svg,
+.story-close svg{
+    width: 32px;
+    height: 32px;
+}
+
+.story-arrow{
+    width: auto;
+    padding: 0;
+    background: transparent;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+.story-arrow:hover{
+    background: transparent;
+}
+
+.story-arrow.left{
+    left: 30px;
+}
+
+.story-arrow.right{
+    right: 30px;
+}
+
+.story-delete{
+    position:absolute;
+    left:30px;
+    top:25px;
+
+    background:#ef4444;
+    color:white;
+
+    padding:8px 16px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+}
