@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="create-container">
+
+    <h2>게시글 작성</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <label class="image-box">
+
+            <input type="file" name="image" hidden>
+
+            <i data-lucide="image"></i>
+
+            <p>사진 선택</p>
+
+        </label>
+
+        <textarea 
+            name="content" 
+            placeholder="문구를 입력하세요..."
+        ></textarea>
+
+        <button type="submit">등록</button>
+    </form>
+
+</div>
+
+<script>
+lucide.createIcons();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 검색</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="search-container">
+
+    <h2>유저 검색</h2>
+
+    <form method="GET">
+        <input
+            type="text"
+            name="q"
+            value="{{ keyword }}"
+            placeholder="유저 이름 검색"
+        >
+
+        <button type="submit">검색</button>
+    </form>
+
+    <div class="user-list">
+
+        {% for user in users %}
+
+        <div class="user-card">
+
+            <img src="{% static 'images/dog.jpg' %}" alt="">
+
+            <div>
+
+                <strong>{{ user.username }}</strong>
+
+                <br>
+
+                <a href="{% url 'users:follow_user' user.id %}">
+                    {% if user.id in following_ids %}
+                        언팔로우
+                    {% else %}
+                        팔로우
+                    {% endif %}
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p>검색 결과가 없습니다.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
