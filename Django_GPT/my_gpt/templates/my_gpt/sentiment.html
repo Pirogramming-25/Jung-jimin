@@ -1,0 +1,103 @@
+{% extends "my_gpt/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>감정 분석</h1>
+
+<p>
+    영어 문장을 입력하면 긍정, 중립, 부정 감정을 분석합니다.
+</p>
+
+<form
+    id="sentiment-form"
+    class="ai-form"
+    data-run-url="{% url 'sentiment_run' %}"
+    data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
+>
+    {% csrf_token %}
+
+    <label for="sentiment-text">
+        분석할 영어 문장
+    </label>
+
+    <br>
+
+    <textarea
+        id="sentiment-text"
+        name="text"
+        rows="8"
+        maxlength="1000"
+        placeholder="Example: I really enjoyed this movie."
+        required
+    ></textarea>
+
+    <br>
+
+    <button type="submit">
+        감정 분석하기
+    </button>
+
+    <div class="loading" style="display: none;">
+        처리 중...
+    </div>
+</form>
+
+<div id="error-box" style="display: none;"></div>
+
+<section id="result-box" style="display: none;">
+    <h2>분석 결과</h2>
+
+    <p>
+        감정:
+        <strong id="result-label"></strong>
+    </p>
+
+    <p>
+        신뢰도:
+        <strong id="result-score"></strong>
+    </p>
+</section>
+
+<section>
+    <h2>최근 실행 기록</h2>
+
+    {% if user.is_authenticated %}
+        <div id="login-history">
+            {% if recent_histories %}
+                {% for history in recent_histories %}
+                    <article>
+                        <p>
+                            <strong>입력:</strong>
+                            {{ history.input_text|truncatechars:80 }}
+                        </p>
+
+                        <p>
+                            <strong>결과:</strong>
+                            {{ history.result.label_ko }}
+                            / {{ history.result.score }}%
+                        </p>
+
+                        <p>
+                            <small>
+                                {{ history.created_at|date:"Y-m-d H:i" }}
+                            </small>
+                        </p>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p class="empty-history">
+                    아직 실행 기록이 없습니다.
+                </p>
+            {% endif %}
+        </div>
+    {% else %}
+        <div id="guest-history">
+            <p>현재 페이지에서 실행한 기록이 표시됩니다.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'my_gpt/js/sentiment.js' %}"></script>
+{% endblock %}

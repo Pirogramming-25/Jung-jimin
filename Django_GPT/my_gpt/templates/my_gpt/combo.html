@@ -1,0 +1,171 @@
+{% extends "my_gpt/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>복합 분석</h1>
+
+<p>
+    영어 문장을 입력하면 감정 분석과 유해 표현 분석을 함께 수행합니다.
+    100자 이상이면 문서 요약도 함께 제공합니다.
+</p>
+
+<form
+    id="combo-form"
+    class="ai-form"
+    data-run-url="{% url 'combo_run' %}"
+>
+    {% csrf_token %}
+
+    <label for="combo-text">
+        분석할 영어 문장 또는 문서
+    </label>
+
+    <br>
+
+    <textarea
+        id="combo-text"
+        name="text"
+        rows="12"
+        maxlength="5000"
+        placeholder="Enter an English sentence or document."
+        required
+    ></textarea>
+
+    <br>
+
+    <button type="submit">
+        복합 분석하기
+    </button>
+
+    <div class="loading" style="display: none;">
+        처리 중...
+    </div>
+</form>
+
+<div
+    id="error-box"
+    style="display: none;"
+></div>
+
+<section
+    id="result-box"
+    style="display: none;"
+>
+    <h2>복합 분석 결과</h2>
+
+    <section>
+        <h3>감정 분석</h3>
+
+        <p>
+            감정:
+            <strong id="sentiment-label"></strong>
+        </p>
+
+        <p>
+            신뢰도:
+            <strong id="sentiment-score"></strong>
+        </p>
+    </section>
+
+    <section>
+        <h3>유해 표현 분석</h3>
+
+        <p>
+            가장 높은 항목:
+            <strong id="toxicity-label"></strong>
+        </p>
+
+        <p>
+            점수:
+            <strong id="toxicity-score"></strong>
+        </p>
+
+        <div id="toxicity-labels"></div>
+    </section>
+
+    <section
+        id="summary-section"
+        style="display: none;"
+    >
+        <h3>문서 요약</h3>
+
+        <p>
+            원문 길이:
+            <strong id="original-length"></strong>
+        </p>
+
+        <p>
+            요약문 길이:
+            <strong id="summary-length"></strong>
+        </p>
+
+        <p>
+            압축률:
+            <strong id="compression-ratio"></strong>
+        </p>
+
+        <p>
+            <strong>요약문</strong>
+        </p>
+
+        <p id="summary-text"></p>
+    </section>
+
+    <p
+        id="summary-message"
+        style="display: none;"
+    >
+        요약 결과는 100자 이상의 문서에서 제공됩니다.
+    </p>
+</section>
+
+<section>
+    <h2>최근 실행 기록</h2>
+
+    <div id="login-history">
+        {% if recent_histories %}
+            {% for history in recent_histories %}
+                <article>
+                    <p>
+                        <strong>입력:</strong>
+                        {{ history.input_text|truncatechars:100 }}
+                    </p>
+
+                    <p>
+                        <strong>감정:</strong>
+                        {{ history.result.sentiment.label_ko }}
+                        / {{ history.result.sentiment.score }}%
+                    </p>
+
+                    <p>
+                        <strong>유해 표현:</strong>
+                        {{ history.result.toxicity.top_label }}
+                        / {{ history.result.toxicity.top_score }}%
+                    </p>
+
+                    {% if history.result.summary %}
+                        <p>
+                            <strong>요약:</strong>
+                            {{ history.result.summary.summary|truncatechars:150 }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <small>
+                            {{ history.created_at|date:"Y-m-d H:i" }}
+                        </small>
+                    </p>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p class="empty-history">
+                아직 실행 기록이 없습니다.
+            </p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'my_gpt/js/combo.js' %}"></script>
+{% endblock %}
