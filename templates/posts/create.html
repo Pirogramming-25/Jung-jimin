@@ -1,17 +1,345 @@
 {% extends 'base.html' %}
+
 {% block head %}
-<title>post_create</title>
+<title>게시글 등록</title>
+
 <style>
     main {
-        height: 100vh;
+        min-height: 100vh;
+        padding: 50px 20px;
+        background-color: #f7f7f7;
+    }
+
+    .create-container {
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .create-card {
+        padding: 36px;
+        background-color: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .create-title {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .create-description {
+        margin-bottom: 30px;
+        color: #777;
+        font-size: 15px;
+    }
+
+    .post-form p {
+        margin-bottom: 22px;
+    }
+
+    .post-form label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .post-form input,
+    .post-form select,
+    .post-form textarea {
+        display: block;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d8d8d8;
+        border-radius: 10px;
+        background-color: white;
+        box-sizing: border-box;
+        font-size: 15px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .post-form input:focus,
+    .post-form select:focus,
+    .post-form textarea:focus {
+        border-color: #198754;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12);
+    }
+
+    .post-form textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .post-form input[type="file"] {
+        padding: 10px;
+        background-color: #fafafa;
+    }
+
+    .nutrition-guide {
+        margin: 4px 0 22px;
+        padding: 16px;
+        border-radius: 12px;
+        background-color: #f1f8f4;
+        color: #3f6650;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    #analysis-status {
+        display: none;
+        margin: 10px 0 20px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .status-loading {
+        background-color: #f3f3f3;
+        color: #666;
+    }
+
+    .status-success {
+        background-color: #eaf7ef;
+        color: #198754;
+    }
+
+    .status-error {
+        background-color: #fff0f0;
+        color: #dc3545;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .submit-button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background-color: #198754;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .submit-button:hover {
+        background-color: #157347;
+        transform: translateY(-1px);
+    }
+
+    .cancel-button {
+        display: inline-block;
+        padding: 12px 24px;
+        border: 1px solid #d8d8d8;
+        border-radius: 10px;
+        background-color: white;
+        color: #555;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .cancel-button:hover {
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    @media (max-width: 600px) {
+        main {
+            padding: 24px 14px;
+        }
+
+        .create-card {
+            padding: 24px 18px;
+        }
+
+        .create-title {
+            font-size: 25px;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .submit-button,
+        .cancel-button {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'posts:create' %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-success">등록하기</button>
-</form>
+<div class="create-container">
+    <div class="create-card">
+        <h1 class="create-title">게시글 등록</h1>
+        <p class="create-description">
+            판매할 상품의 정보와 영양성분 이미지를 등록해주세요.
+        </p>
+
+        <form
+            class="post-form"
+            action="{% url 'posts:create' %}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="nutrition-guide">
+                영양성분 이미지를 선택하면 칼로리, 탄수화물, 단백질,
+                지방 정보가 자동으로 입력됩니다. 인식된 값은 직접 수정할 수 있습니다.
+            </div>
+
+            <p id="analysis-status"></p>
+
+            <div class="button-group">
+                <a href="{% url 'posts:main' %}" class="cancel-button">
+                    취소
+                </a>
+
+                <button type="submit" class="submit-button">
+                    등록하기
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const nutritionImageInput =
+        document.getElementById('id_nutrition_image');
+
+    const caloriesInput =
+        document.getElementById('id_calories');
+
+    const carbohydratesInput =
+        document.getElementById('id_carbohydrates');
+
+    const proteinInput =
+        document.getElementById('id_protein');
+
+    const fatInput =
+        document.getElementById('id_fat');
+
+    const statusElement =
+        document.getElementById('analysis-status');
+
+    function showStatus(message, className) {
+        statusElement.style.display = 'block';
+        statusElement.textContent = message;
+        statusElement.className = className;
+    }
+
+    function setNutritionValue(input, value) {
+        if (value !== null && value !== undefined) {
+            input.value = value;
+        } else {
+            input.value = '';
+        }
+    }
+
+    nutritionImageInput.addEventListener('change', async function () {
+        const imageFile = nutritionImageInput.files[0];
+
+        if (!imageFile) {
+            statusElement.style.display = 'none';
+            return;
+        }
+
+        const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+        ];
+
+        if (!allowedTypes.includes(imageFile.type)) {
+            showStatus(
+                'JPG, PNG, WEBP 이미지만 선택할 수 있습니다.',
+                'status-error'
+            );
+
+            nutritionImageInput.value = '';
+            return;
+        }
+
+        showStatus('영양성분 이미지를 분석하고 있습니다...', 'status-loading');
+
+        const formData = new FormData();
+        formData.append('nutrition_image', imageFile);
+
+        try {
+            const response = await fetch(
+                "{% url 'posts:analyze_nutrition' %}",
+                {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken':
+                            document.querySelector(
+                                '[name=csrfmiddlewaretoken]'
+                            ).value,
+                    },
+                    body: formData,
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(
+                    data.error || 'OCR 분석에 실패했습니다.'
+                );
+            }
+
+            setNutritionValue(caloriesInput, data.calories);
+            setNutritionValue(carbohydratesInput, data.carbohydrates);
+            setNutritionValue(proteinInput, data.protein);
+            setNutritionValue(fatInput, data.fat);
+
+            const extractedCount = [
+                data.calories,
+                data.carbohydrates,
+                data.protein,
+                data.fat,
+            ].filter(
+                value => value !== null && value !== undefined
+            ).length;
+
+            if (extractedCount === 4) {
+                showStatus(
+                    '영양성분 분석이 완료되었습니다.',
+                    'status-success'
+                );
+            } else {
+                showStatus(
+                    '일부 정보만 인식되었습니다. 값을 직접 확인해주세요.',
+                    'status-error'
+                );
+            }
+
+        } catch (error) {
+            console.error(error);
+
+            showStatus(
+                error.message,
+                'status-error'
+            );
+        }
+    });
+</script>
 {% endblock %}

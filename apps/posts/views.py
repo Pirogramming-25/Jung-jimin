@@ -1,3 +1,10 @@
+import os
+import tempfile
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+from .services.ocr_service import extract_nutrition
 from django.shortcuts import render, redirect
 from .models import Post
 from .forms import PostForm
@@ -64,3 +71,76 @@ def delete(request, pk):
     post = Post.objects.get(id=pk)
     post.delete()
     return redirect('/')
+
+@require_POST
+def analyze_nutrition(request):
+    nutrition_image = request.FILES.get('nutrition_image')
+
+    if not nutrition_image:
+        return JsonResponse(
+            {
+                'success': False,
+                'error': '영양성분 이미지를 선택해주세요.',
+            },
+            status=400,
+        )
+
+    allowed_types = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+    ]
+
+    if nutrition_image.content_type not in allowed_types:
+        return JsonResponse(
+            {
+                'success': False,
+                'error': 'JPG, PNG, WEBP 이미지만 업로드할 수 있습니다.',
+            },
+            status=400,
+        )
+
+    temp_path = None
+
+    try:
+        suffix = os.path.splitext(nutrition_image.name)[1]
+
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=suffix,
+        ) as temp_file:
+            for chunk in nutrition_image.chunks():
+                temp_file.write(chunk)
+
+            temp_path = temp_file.name
+
+        nutrition = extract_nutrition(temp_path)
+
+        return JsonResponse(
+            {
+                'success': True,
+                'calories': nutrition.get('calories'),
+                'carbohydrates': nutrition.get('carbohydrates'),
+                'protein': nutrition.get('protein'),
+                'fat': nutrition.get('fat'),
+                'ocr_text': nutrition.get('ocr_text', ''),
+            }
+        )
+
+    except Exception as error:
+        import traceback
+
+        print('OCR 오류:', error)
+        traceback.print_exc()
+
+        return JsonResponse(
+            {
+                'success': False,
+                'error': f'이미지를 분석하지 못했습니다: {error}',
+            },
+            status=500,
+        )
+
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
