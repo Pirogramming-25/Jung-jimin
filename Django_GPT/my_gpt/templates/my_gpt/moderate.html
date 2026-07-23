@@ -1,0 +1,113 @@
+{% extends "my_gpt/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>유해 표현 분석</h1>
+
+<p>
+    영어 문장을 입력하면 욕설, 모욕, 위협 등의 유해 표현을 분석합니다.
+</p>
+
+<form
+    id="moderate-form"
+    class="ai-form"
+    data-run-url="{% url 'moderate_run' %}"
+>
+    {% csrf_token %}
+
+    <label for="moderate-text">
+        분석할 영어 문장
+    </label>
+
+    <br>
+
+    <textarea
+        id="moderate-text"
+        name="text"
+        rows="8"
+        maxlength="1000"
+        placeholder="Example: I really enjoyed talking with you."
+        required
+    ></textarea>
+
+    <br>
+
+    <button type="submit">
+        유해 표현 분석하기
+    </button>
+
+    <div
+        class="loading"
+        style="display: none;"
+    >
+        처리 중...
+    </div>
+</form>
+
+<div
+    id="error-box"
+    style="display: none;"
+></div>
+
+<section
+    id="result-box"
+    style="display: none;"
+>
+    <h2>분석 결과</h2>
+
+    <p>
+        가장 높은 항목:
+        <strong id="top-label"></strong>
+    </p>
+
+    <p>
+        점수:
+        <strong id="top-score"></strong>
+    </p>
+
+    <h3>전체 항목</h3>
+
+    <div id="all-labels"></div>
+</section>
+
+<section>
+    <h2>최근 실행 기록</h2>
+
+    <div id="login-history">
+        {% if recent_histories %}
+            {% for history in recent_histories %}
+                <article>
+                    <p>
+                        <strong>입력:</strong>
+                        {{ history.input_text|truncatechars:100 }}
+                    </p>
+
+                    <p>
+                        <strong>가장 높은 항목:</strong>
+                        {{ history.result.top_label }}
+                    </p>
+
+                    <p>
+                        <strong>점수:</strong>
+                        {{ history.result.top_score }}%
+                    </p>
+
+                    <p>
+                        <small>
+                            {{ history.created_at|date:"Y-m-d H:i" }}
+                        </small>
+                    </p>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p class="empty-history">
+                아직 실행 기록이 없습니다.
+            </p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'my_gpt/js/moderate.js' %}"></script>
+{% endblock %}
